@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.AIRetail.DAO.OutPassengersDAO">
+	
+	<select id="getDataByGenderHour" resultMap="BaseResultMap">
+		select  time_stamp,
+		sum(case Gender when "Male" then 1 else 0 end) male,
+		sum(case Gender when "Female" then 1 else 0 end) female 
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m%d%H');
+	</select>
+	
+	<select id="getDataByGenderDay" resultMap="BaseResultMap">
+		select time_stamp,
+		sum(case Gender when "Male" then 1 else 0 end) male,
+		sum(case Gender when "Female" then 1 else 0 end) female 
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m%d');
+	</select>
+	
+	<select id="getDataByGenderMonth" resultMap="BaseResultMap">
+		select time_stamp,
+		sum(case Gender when "Male" then 1 else 0 end) male,
+		sum(case Gender when "Female" then 1 else 0 end) female 
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m');
+	</select>
+	<select id="getDataByAgeHour" resultMap="AgeResultMap">
+	<![CDATA[
+		select time_stamp,
+		sum(case Age when "1" then 1 else 0 end) a1,
+		sum(case Age when "2" then 1 else 0 end) a2,
+		sum(case Age when "3" then 1 else 0 end) a3,
+		sum(case Age when "4" then 1 else 0 end) a4,
+		sum(case Age when "5" then 1 else 0 end) a5,
+		sum(case Age when "6" then 1 else 0 end) a6 
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m%d%H');
+	]]>
+	</select>
+	<select id="getDataByAgeDay" resultMap="AgeResultMap">
+	<![CDATA[
+		select  time_stamp,
+		sum(case Age when "1" then 1 else 0 end) a1,
+		sum(case Age when "2" then 1 else 0 end) a2,
+		sum(case Age when "3" then 1 else 0 end) a3,
+		sum(case Age when "4" then 1 else 0 end) a4,
+		sum(case Age when "5" then 1 else 0 end) a5,
+		sum(case Age when "6" then 1 else 0 end) a6  
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m%d');
+    ]]>
+	</select>
+	<select id="getDataByAgeMonth" resultMap="AgeResultMap">
+	<![CDATA[
+		select  time_stamp,
+		sum(case Age when "1" then 1 else 0 end) a1,
+		sum(case Age when "2" then 1 else 0 end) a2,
+		sum(case Age when "3" then 1 else 0 end) a3,
+		sum(case Age when "4" then 1 else 0 end) a4,
+		sum(case Age when "5" then 1 else 0 end) a5,
+		sum(case Age when "6" then 1 else 0 end) a6  
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP} group by DATE_FORMAT(time_stamp,'%Y%m');
+	]]>
+	</select>
+    <insert id="insertOutPassenger" parameterType="com.AIRetail.Entity.OutPassengersEntity">
+        insert into out_passengers (rank_id,face_pic,Gender,Age,whole_body_pic,time_stamp) values(#{rankid},#{facepic},#{gender},#{age},#{wholebodypic},#{timestamp})
+    </insert>
+	
+	<select id="getData" resultMap="CustomerResultMap">
+		select rank_id,face_pic,Gender,Age,whole_body_pic,time_stamp
+		from out_passengers where time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP};
+	</select>
+	
+	<resultMap id="AgeResultMap" type="com.AIRetail.Model.CustomerDataAge">
+	    <result column="time_stamp" property="time_stamp" />
+		<result column="a1" property="a1" />
+		<result column="a2" property="a2" />
+		<result column="a3" property="a3" />
+		<result column="a4" property="a4" />
+		<result column="a5" property="a5" />
+		<result column="a6" property="a6" />
+	</resultMap>
+	
+	<resultMap id="BaseResultMap" type="com.AIRetail.Model.CustomerDataGender">
+	    <result column="time_stamp" property="time_stamp" />
+		<result column="female" property="female" />
+		<result column="male" property="male" />
+	</resultMap>
+	
+	<resultMap id="CustomerResultMap" type="com.AIRetail.Model.CustomerData">
+	    <result column="time_stamp" property="timestamp" />
+		<result column="Gender" property="gender" />
+		<result column="Age" property="age" />
+		<result column="whole_body_pic" property="wholebodypic" />
+		<result column="face_pic" property="facepic" />
+		<result column="rank_id" property="rankid" />
+	</resultMap>
+</mapper>

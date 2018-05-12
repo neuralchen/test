@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.AIRetail.DAO.ShopHeatmapDAO">
+	<resultMap id="BaseResultMap" type="com.AIRetail.Entity.ShopStructureEntity">
+		<result column="x_grid" property="x_grid_count" />
+		<result column="y_grid" property="y_grid_count" />
+		<result column="shap" property="shap" />
+	</resultMap>
+	<resultMap id="HeatmapResultMap" type="com.AIRetail.Entity.HeatmapDataEntity">
+	    <result column="rank_id" property="rankid" />
+		<result column="mapdata" property="data" />
+		<result column="time_stamp" property="ts" />
+	</resultMap>
+	
+	<select id="getShopStructure" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		x_grid,y_grid,shap
+		from shop_structure
+		where rank_id = #{rank_id,jdbcType=INTEGER}
+	</select>
+	<select id="getHeatmapDataByHour" resultMap="HeatmapResultMap">
+	<![CDATA[
+		select rank_id,time_stamp,mapdata 
+		from heatmap where (time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP}) and rank_id = #{rank_id,jdbcType=INTEGER} group by time_stamp;
+	]]>
+	</select>
+	<select id="getHeatmapDataByDay" resultMap="HeatmapResultMap">
+	<![CDATA[
+		select rank_id,time_stamp,mapdata 
+		from heatmap where (time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP}) and rank_id = #{rank_id,jdbcType=INTEGER} group by time_stamp;
+	]]>
+	</select>
+	<select id="getHeatmapDataByMonth" resultMap="HeatmapResultMap">
+	<![CDATA[
+		select rank_id,time_stamp,mapdata 
+		from heatmap where (time_stamp between #{st,jdbcType=TIMESTAMP} and #{et,jdbcType=TIMESTAMP}) and rank_id = #{rank_id,jdbcType=INTEGER} group by time_stamp;
+	]]>
+	</select>
+	<insert id="insertmapData" parameterType="com.AIRetail.Entity.HeatmapDataEntity">
+        insert into heatmap (rank_id,mapdata,time_stamp) values(#{rankid},#{data},#{ts})
+    </insert>
+</mapper>
